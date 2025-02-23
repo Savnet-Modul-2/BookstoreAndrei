@@ -1,10 +1,13 @@
 package modul2proiect.bookstore.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import modul2proiect.bookstore.entities.User;
 import modul2proiect.bookstore.repository.UserRepository;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -47,6 +50,15 @@ public class UserService {
         user.setVerificationCodeExpiration(null);
 
         return userRepository.save(user);
+    }
+    public User login(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        String sha256Hex = DigestUtils.sha256Hex(password).toUpperCase();
+        if (user.getPassword().equals(sha256Hex) && user.getVerifiedAccount()) {
+            return user;
+        }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email or password");
     }
 
 }

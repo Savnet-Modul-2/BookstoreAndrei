@@ -35,4 +35,12 @@ public class UserController {
         User updatedUser = userService.verify(userToUpdate.getEmail(), userToUpdate.getVerificationCode());
         return ResponseEntity.ok(UserMapper.user2UserDTO(updatedUser));
     }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserDTO updatedUserDTO) {
+        User userToLogin = UserMapper.userDTO2User(updatedUserDTO);
+        User loggedinUser = userService.login(userToLogin.getEmail(), userToLogin.getPassword());
+        return ResponseEntity.ok(UserMapper.user2UserDTO(loggedinUser));
+
+    }
+
 }
