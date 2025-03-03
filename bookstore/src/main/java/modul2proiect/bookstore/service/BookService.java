@@ -35,7 +35,7 @@ public class BookService {
 
     public Book getById(Long bookIdToSearchFor) {
         return bookRepository.findById(bookIdToSearchFor)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(() -> new EntityNotFoundException("Book with ID " + bookIdToSearchFor + " not found."));
     }
     public List<Book> findAll() {
         return bookRepository.findAll();
