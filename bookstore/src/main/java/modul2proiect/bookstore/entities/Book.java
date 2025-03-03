@@ -3,6 +3,8 @@ package modul2proiect.bookstore.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity(name = "book")
@@ -34,6 +36,9 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "library_id")
     private Library library;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Exemplary> exemplars = new ArrayList<>();
 
     public Long getId() {
         return id;

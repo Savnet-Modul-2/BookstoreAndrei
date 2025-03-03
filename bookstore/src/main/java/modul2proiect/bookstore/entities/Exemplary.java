@@ -3,7 +3,9 @@ package modul2proiect.bookstore.entities;
 import jakarta.persistence.*;
 
 
-import jakarta.persistence.*;
+
+
+import java.util.List;
 
 @Entity(name = "exemplary")
 @Table(name = "exemplars", schema = "public")
@@ -23,11 +25,14 @@ public class Exemplary {
     @JoinColumn(name = "BOOK_ID")
     private Book book;
 
-    public Long getId() {
+    @OneToMany(mappedBy = "exemplary")
+    private List<Reservation> reservations;
+
+    public Long getID() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setID(Long id) {
         this.id = id;
     }
 
@@ -54,7 +59,32 @@ public class Exemplary {
     public void setBook(Book book) {
         this.book = book;
     }
-}
 
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
+    public void addReservation(Reservation reservation) {
+        if (!reservations.contains(reservation)) {
+            reservations.add(reservation);
+            reservation.setExemplary(this);
+        }
+    }
+
+    public void removeReservation(Reservation reservation) {
+        if (reservations.contains(reservation)) {
+            reservations.remove(reservation);
+            reservation.setExemplary(null);
+        }
+    }
+
+    public Long getId() {
+        return id;
+    }
+}
 
 
