@@ -20,6 +20,20 @@ public class ExemplaryMapper {
         return exemplaryDTO;
     }
 
+
+    public static Exemplary exemplaryDTO2Exemplary(ExemplaryDTO exemplaryDTO) {
+        Exemplary exemplary = new Exemplary();
+
+        exemplary.setPublisher(exemplaryDTO.getPublisher());
+        exemplary.setMaximumBookingTime(exemplaryDTO.getMaximumBookingTime());
+        exemplary.setBook(BookMapper.bookDto2Book(exemplaryDTO.getBookDTO()));
+
+        return exemplary;
+    }
+
+
+
+
     public static List<Exemplary> exemplarsCreateDTO2Exemplars(ExemplarsCreateDTO exemplarsCreateDTO) {
         List<Exemplary> exemplars = new ArrayList<>();
 

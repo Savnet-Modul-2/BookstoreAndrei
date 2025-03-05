@@ -10,9 +10,16 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+
     public void sendVerificationEmail(String to, String code){
+
+
+        if (to == null || to.isEmpty()) {
+            throw new IllegalArgumentException("Email address cannot be null or empty");
+        }
         SimpleMailMessage message=new SimpleMailMessage();
         message.setTo(to);
+
         message.setSubject("Verificare cont aplicatie Bookstore");
         message.setText("Codul tau de verificare este: "+code);
         mailSender.send(message);
