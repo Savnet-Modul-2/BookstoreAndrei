@@ -18,4 +18,17 @@ public class ReservationMapper {
 
         return reservationDTO;
     }
+    public static  Reservation reservationDTO2Reservation(ReservationDTO reservationDTO){
+        Reservation reservation=new Reservation();
+        reservation.setID(reservationDTO.getID());
+        reservation.setStartDate(reservationDTO.getStartDate());
+        reservation.setEndDate(reservationDTO.getEndDate());
+        reservation.setStatus(reservationDTO.getStatus());
+        if (reservationDTO.getExemplaryDTO() != null) {
+            reservation.setExemplary(ExemplaryMapper.exemplaryDTO2Exemplary(reservationDTO.getExemplaryDTO()));
+        }
+        reservation.setUser(UserMapper.userDTO2User(reservationDTO.getUserDTO()));
+
+        return reservation;
+    }
 }

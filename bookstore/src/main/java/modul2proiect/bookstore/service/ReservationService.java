@@ -3,10 +3,7 @@ package modul2proiect.bookstore.service;
 import jakarta.persistence.EntityNotFoundException;
 import modul2proiect.bookstore.dto.ReservationDTO;
 import modul2proiect.bookstore.entities.*;
-import modul2proiect.bookstore.repository.BookRepository;
-import modul2proiect.bookstore.repository.ExemplaryRepository;
-import modul2proiect.bookstore.repository.ReservationRepository;
-import modul2proiect.bookstore.repository.UserRepository;
+import modul2proiect.bookstore.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -24,13 +22,15 @@ public class ReservationService {
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
     private final ExemplaryRepository exemplaryRepository;
+    private final LibrarianRepository librarianRepository;
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository, UserRepository userRepository, BookRepository bookRepository, ExemplaryRepository exemplaryRepository) {
+    public ReservationService(ReservationRepository reservationRepository, UserRepository userRepository, BookRepository bookRepository, ExemplaryRepository exemplaryRepository, LibrarianRepository librarianRepository) {
         this.reservationRepository = reservationRepository;
         this.userRepository = userRepository;
         this.bookRepository = bookRepository;
         this.exemplaryRepository = exemplaryRepository;
+        this.librarianRepository = librarianRepository;
     }
 
     public Page<Book> searchBooks(String title, String author, Integer pageNumber, Integer pageSize) {
@@ -70,5 +70,31 @@ public class ReservationService {
         userRepository.save(user);
 
         return reservation;
+    }
+
+    public Reservation updateReservation(Long reservationID, Long librarianID,Reservation reservation_update) {
+
+        Reservation reservation = reservationRepository.findById(reservationID)
+                .orElseThrow(() -> new EntityNotFoundException("Reservation with ID " + reservationID + " not found."));
+       Librarian librarian= librarianRepository.findById(librarianID)
+                .orElseThrow(() -> new EntityNotFoundException("Librarian with ID " + librarianID + " not found."));
+     /*   if (!Objects.equals(librarian.getLibrary().getId(),
+                reservation.getExemplary().getBook().getLibrary().getId())) {
+            throw new IllegalStateException("No access for librarian to the reservation");
+        }*/
+        if(!Objects.equals(librarian.getLibrary().getId(),reservation.getExemplary().getBook().getLibrary().getId())){
+            throw new IllegalStateException("The librarian does not have access to the reservation");
+        }
+
+        if(reservation.getStatus().updateState( reservation_update.getStatus())){
+
+            reservation.setStatus(reservation_update.getStatus());
+        }else{
+            throw new IllegalStateException("Invalid state transition");
+        }
+
+
+       return reservationRepository.save(reservation);
+
     }
 }

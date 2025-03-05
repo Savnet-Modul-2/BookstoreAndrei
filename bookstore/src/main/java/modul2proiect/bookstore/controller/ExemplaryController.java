@@ -25,6 +25,16 @@ public class ExemplaryController {
         this.exemplaryService = exemplaryService;
     }
 
+//    @PostMapping
+//    public ResponseEntity<?> create(@RequestBody ExemplarsCreateDTO exemplarsCreateDTO) {
+//        List<Exemplary> exemplarsToCreate = ExemplaryMapper.exemplarsCreateDTO2Exemplars(exemplarsCreateDTO);
+//        List<Exemplary> createdExemplars = exemplaryService.create(exemplarsToCreate, exemplarsCreateDTO.getBookID());
+//
+//        return ResponseEntity.ok(createdExemplars.stream()
+//                .map(ExemplaryMapper::exemplary2ExemplaryDTO)
+//                .toList());
+//    }
+
     @PostMapping
     public ResponseEntity<?> create(@RequestBody ExemplarsCreateDTO exemplarsCreateDTO) {
         List<Exemplary> exemplarsToCreate = ExemplaryMapper.exemplarsCreateDTO2Exemplars(exemplarsCreateDTO);
